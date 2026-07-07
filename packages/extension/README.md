@@ -1,18 +1,19 @@
-# PHPUnit & Pest Test Explorer for VS Code
+# Frank's PHPUnit & Pest
 
-[![Version](https://img.shields.io/vscode-marketplace/v/recca0120.vscode-phpunit.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit)
-[![Installs](https://img.shields.io/vscode-marketplace/i/recca0120.vscode-phpunit.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit)
-[![License](https://img.shields.io/github/license/recca0120/vscode-phpunit.svg?style=flat-square)](LICENSE.md)
+[![License](https://img.shields.io/github/license/frankfava/vscode-phpunit.svg?style=flat-square)](LICENSE.md)
 
-[繁體中文](https://github.com/recca0120/vscode-phpunit/blob/main/packages/extension/README.zh-TW.md)
+> **Personal fork of [recca0120/vscode-phpunit](https://github.com/recca0120/vscode-phpunit).**
+> Published under the `frankfava` publisher so it installs as a distinct extension (and is never overwritten by the marketplace build). All upstream credit belongs to [@recca0120](https://github.com/recca0120).
+>
+> **Added in this fork:** an optional integrated-**terminal** output writer — enable `phpunit.output.terminal` to stream formatted, ANSI-colored test results into a dedicated "PHPUnit" terminal, in addition to the Test Explorer.
 
-Run [PHPUnit](https://phpunit.de/) and [Pest](https://pestphp.com/) tests directly in VS Code using the native Test Explorer UI.
+Run [PHPUnit](https://phpunit.de/) and [Pest](https://pestphp.com/) tests directly in VS Code and Cursor using the native Test Explorer UI.
 
 ![PHPUnit](https://raw.githubusercontent.com/recca0120/vscode-phpunit/main/packages/extension/img/phpunit.gif)
 
 ## Quick Start
 
-1. Install the extension from the [VS Code Marketplace](https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit)
+1. Build and install this fork: `pnpm install && pnpm compile && pnpm --filter vscode-phpunit exec vsce package --no-dependencies`, then `code --install-extension packages/extension/*.vsix` (use `cursor` in place of `code` for Cursor)
 2. Open a PHP project that contains a `phpunit.xml` or `phpunit.xml.dist`
 3. Tests appear automatically in the Test Explorer sidebar — click to run
 
@@ -25,6 +26,7 @@ Run [PHPUnit](https://phpunit.de/) and [Pest](https://pestphp.com/) tests direct
 - **Auto-detect binary** — reads `composer.json` to use `vendor/bin/pest` for Pest projects automatically
 - **Auto-reload** — reloads all tests when `phpunit.xml` or `composer.lock` changes
 - **Colored output** — syntax-highlighted results with embedded PHP source snippets
+- **Integrated-terminal output** _(fork addition)_ — set `phpunit.output.terminal` to also stream results into a dedicated "PHPUnit" terminal (ANSI colors preserved), cleared and revealed on each run
 - **Clickable stack traces** — jump to file:line directly from error output
 - **Remote environments** — Docker, SSH, Laravel Sail, DDEV via custom commands
 - **Multi-workspace Docker** — single shared container for multiple workspace folders

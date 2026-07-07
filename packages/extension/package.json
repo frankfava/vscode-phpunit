@@ -1,15 +1,22 @@
 {
     "name": "vscode-phpunit",
-    "description": "Run PHPUnit and Pest tests in VS Code with the native Test Explorer. Supports Docker, SSH, Laravel Sail, ParaTest, and Xdebug step-debugging.",
-    "displayName": "PHPUnit & Pest Test Explorer",
+    "description": "Run PHPUnit and Pest tests in VS Code and Cursor with the native Test Explorer, plus optional integrated-terminal output. Personal fork of recca0120/vscode-phpunit. Supports Docker, SSH, Laravel Sail, ParaTest, and Xdebug step-debugging.",
+    "displayName": "Frank's PHPUnit & Pest",
     "icon": "img/icon.png",
-    "publisher": "recca0120",
+    "publisher": "frankfava",
+    "author": {
+        "name": "Frank Fava"
+    },
     "version": "3.9.38",
     "private": true,
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/recca0120/vscode-phpunit"
+        "url": "https://github.com/frankfava/vscode-phpunit"
+    },
+    "homepage": "https://github.com/frankfava/vscode-phpunit#readme",
+    "bugs": {
+        "url": "https://github.com/frankfava/vscode-phpunit/issues"
     },
     "engines": {
         "vscode": "^1.88.0"
