@@ -14,6 +14,7 @@ export interface FolderTestContext {
 export const TYPES = {
     TestController: Symbol.for('TestController'),
     OutputChannel: Symbol.for('OutputChannel'),
+    Terminal: Symbol.for('Terminal'),
     FileChangedEmitter: Symbol.for('FileChangedEmitter'),
     WorkspaceFolder: Symbol.for('WorkspaceFolder'),
     ChildContainerFactory: Symbol.for('ChildContainerFactory'),

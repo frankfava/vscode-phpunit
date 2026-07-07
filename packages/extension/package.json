@@ -151,6 +151,12 @@
                     "description": "Override individual format fields from the preset. See documentation for available fields.",
                     "scope": "resource"
                 },
+                "phpunit.output.terminal": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Also stream formatted test output to an integrated 'PHPUnit' terminal (ANSI colors preserved). Test Explorer results are unaffected. The terminal is cleared and revealed at the start of each run.",
+                    "scope": "resource"
+                },
                 "phpunit.clearDebugOutputOnRun": {
                     "type": "boolean",
                     "default": true,

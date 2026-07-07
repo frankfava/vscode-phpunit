@@ -17,6 +17,7 @@ import {
 } from 'vscode';
 import { Configuration } from './Configuration';
 import { ObserverFactory } from './Observers';
+import { PhpUnitTerminal } from './Observers/Writers';
 import { TestCollection } from './TestCollection';
 import { TestFileDiscovery, TestFileWatcher, TestWatchManager } from './TestDiscovery';
 import {
@@ -38,6 +39,10 @@ export function createParentContainer(
     // VS Code external objects (shared)
     container.bind(TYPES.TestController).toConstantValue(ctrl);
     container.bind(TYPES.OutputChannel).toConstantValue(outputChannel);
+    container
+        .bind(TYPES.Terminal)
+        .toDynamicValue(() => new PhpUnitTerminal())
+        .inSingletonScope();
 
     // Child container factory
     container

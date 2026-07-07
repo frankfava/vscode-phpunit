@@ -19,7 +19,7 @@ import { DebugOutputObserver } from './DebugOutputObserver';
 import { ErrorDialogObserver } from './ErrorDialogObserver';
 import { PrinterObserver } from './PrinterObserver';
 import { TestResultObserver } from './TestResultObserver';
-import { TestRunWriter } from './Writers';
+import { type PhpUnitTerminal, TerminalWriter, TestRunWriter } from './Writers';
 
 @injectable()
 export class ObserverFactory {
@@ -28,6 +28,7 @@ export class ObserverFactory {
         @inject(TYPES.OutputChannel) private outputChannel: OutputChannel,
         @inject(Configuration) private configuration: IConfiguration,
         @inject(PHPUnitXML) private phpUnitXML: PHPUnitXML,
+        @inject(TYPES.Terminal) private terminal: PhpUnitTerminal,
     ) {}
 
     create(queue: Map<TestDefinition, TestItem>, testRun: TestRun): TestRunnerObserver[] {
@@ -39,7 +40,7 @@ export class ObserverFactory {
             this.configuration.get('output.format') as Partial<PrinterFormat> | undefined,
         );
 
-        return [
+        const observers: TestRunnerObserver[] = [
             new DatasetObserver(this.testCollection, testItemById),
             new TestResultObserver(queue, testRun, testItemById),
             new DebugOutputObserver(this.outputChannel, this.configuration, testItemById),
@@ -49,5 +50,18 @@ export class ObserverFactory {
             ),
             new ErrorDialogObserver(this.configuration),
         ];
+
+        if (this.configuration.get('output.terminal') === true) {
+            this.terminal.clear();
+            this.terminal.show();
+            observers.push(
+                new PrinterObserver(
+                    new TerminalWriter(this.terminal),
+                    new Printer(this.phpUnitXML, format),
+                ),
+            );
+        }
+
+        return observers;
     }
 }
