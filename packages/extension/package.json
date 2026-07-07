@@ -164,6 +164,17 @@
                     "description": "Also stream formatted test output to an integrated 'PHPUnit' terminal (ANSI colors preserved). Test Explorer results are unaffected. The terminal is cleared and revealed at the start of each run.",
                     "scope": "resource"
                 },
+                "phpunit.deferToExtensions": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "default": [
+                        "devsense.phptools-vscode"
+                    ],
+                    "markdownDescription": "If any extension listed here is installed in the current profile, this extension will **not** register its own Test Explorer controller — deferring test discovery/running to that extension instead. Avoids duplicate PHPUnit test profiles when another test provider (e.g. DevSense PHP Tools) is present. Set to `[]` to always register regardless of other extensions.\n\nNote: VS Code has no API to detect another extension's test profiles directly, so this matches by extension ID.",
+                    "scope": "window"
+                },
                 "phpunit.clearDebugOutputOnRun": {
                     "type": "boolean",
                     "default": true,

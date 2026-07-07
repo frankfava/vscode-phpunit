@@ -32,6 +32,25 @@ export async function activate(context: ExtensionContext) {
         // tree-sitter init failed; TestParser will use php-parser fallback
     });
 
+    // Defer to another test provider if one is present. VS Code exposes no API to
+    // enumerate other extensions' test controllers/profiles, so we key off known
+    // extension IDs (phpunit.deferToExtensions) and check whether they are installed
+    // in the current profile. When a match is found we skip registering our own Test
+    // Explorer controller entirely, avoiding duplicate PHPUnit test profiles.
+    const deferTo = workspace
+        .getConfiguration('phpunit')
+        .get<string[]>('deferToExtensions', [])
+        .find((id) => extensions.getExtension(id) !== undefined);
+    if (deferTo !== undefined) {
+        const channel = window.createOutputChannel('PHPUnit Debug', 'phpunit');
+        channel.appendLine(
+            `[PHPUnit] "${deferTo}" is installed; deferring test registration to it ` +
+                `(phpunit.deferToExtensions). Set phpunit.deferToExtensions to [] to always register.`,
+        );
+        context.subscriptions.push(channel);
+        return;
+    }
+
     const ctrl = tests.createTestController('phpunit', 'PHPUnit');
     const outputChannel = window.createOutputChannel('PHPUnit Debug', 'phpunit');
     const parentContainer = createParentContainer(ctrl, outputChannel);
