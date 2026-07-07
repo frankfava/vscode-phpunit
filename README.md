@@ -1,10 +1,16 @@
 # vscode-phpunit
 
-Monorepo for the **PHPUnit & Pest Test Explorer** VS Code extension.
+Monorepo for **Frank's PHPUnit & Pest** — a VS Code / Cursor Test Explorer extension for PHPUnit and Pest.
 
-[![Version](https://img.shields.io/vscode-marketplace/v/recca0120.vscode-phpunit.svg?style=flat-square&label=vscode%20marketplace)](https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit)
-[![Installs](https://img.shields.io/vscode-marketplace/i/recca0120.vscode-phpunit.svg?style=flat-square)](https://marketplace.visualstudio.com/items?itemName=recca0120.vscode-phpunit)
-[![License](https://img.shields.io/github/license/recca0120/vscode-phpunit.svg?style=flat-square)](LICENSE.md)
+[![License](https://img.shields.io/github/license/frankfava/vscode-phpunit.svg?style=flat-square)](LICENSE.md)
+
+> **Personal fork of [recca0120/vscode-phpunit](https://github.com/recca0120/vscode-phpunit)**, published under the `frankfava` publisher (extension id `frankfava.vscode-phpunit`) so it installs as a distinct extension and is never overwritten by the upstream marketplace build. All upstream credit belongs to [@recca0120](https://github.com/recca0120).
+>
+> **Fork additions:**
+> - `phpunit.output.terminal` — also stream formatted, ANSI-colored test results into a dedicated integrated "PHPUnit" terminal.
+> - `phpunit.deferToExtensions` — skip registering the Test Explorer controller when another test provider (e.g. DevSense PHP Tools) is installed, to avoid duplicate test profiles.
+>
+> This fork is built and installed from source (see below); it is not published to the VS Code Marketplace.
 
 ## Packages
 
@@ -64,6 +70,9 @@ pnpm package
 
 # Produce .vsix file
 cd packages/extension && pnpm exec vsce package --no-dependencies
+
+# Install the built .vsix (use `cursor` instead of `code` for Cursor)
+code --install-extension packages/extension/*.vsix --force
 ```
 
 ### Debugging the Extension
@@ -95,8 +104,8 @@ The repository includes launch configurations in `.vscode/launch.json`:
 
 ## Contributing
 
-- [Report a bug](https://github.com/recca0120/vscode-phpunit/issues/new?template=bug_report.yml)
-- [Request a feature](https://github.com/recca0120/vscode-phpunit/issues/new?template=feature_request.yml)
+- [Report a bug](https://github.com/frankfava/vscode-phpunit/issues/new?template=bug_report.yml)
+- [Request a feature](https://github.com/frankfava/vscode-phpunit/issues/new?template=feature_request.yml)
 - [Contributing guide](CONTRIBUTING.md)
 
 ## License
