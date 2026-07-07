@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { initTreeSitter, PHPUnitXML } from '@vscode-phpunit/phpunit';
 import {
     type CancellationToken,
+    commands,
     type Disposable,
     type ExtensionContext,
     extensions,
@@ -19,9 +20,10 @@ import { PHPUnitLinkProvider, TestCommandRegistry } from './Commands';
 import { Configuration } from './Configuration';
 import { createParentContainer } from './container';
 import { FileCoverageAdapter } from './FileCoverageAdapter';
+import { PhpUnitTerminal } from './Observers/Writers';
 import { TestCollection } from './TestCollection';
 import { TestFileWatcher } from './TestDiscovery';
-import { TestRunDispatcher } from './TestExecution';
+import { TerminalTestRunner, TestRunDispatcher } from './TestExecution';
 import { TYPES } from './types';
 import { WorkspaceFolderManager } from './WorkspaceFolderManager';
 
@@ -36,7 +38,9 @@ export async function activate(context: ExtensionContext) {
     // enumerate other extensions' test controllers/profiles, so we key off known
     // extension IDs (phpunit.deferToExtensions) and check whether they are installed
     // in the current profile. When a match is found we skip registering our own Test
-    // Explorer controller entirely, avoiding duplicate PHPUnit test profiles.
+    // Explorer controller (avoiding duplicate PHPUnit test profiles) — but we still
+    // register the terminal-output run commands, since streaming formatted output to
+    // a terminal is this extension's job and has nothing to duplicate.
     const deferTo = workspace
         .getConfiguration('phpunit')
         .get<string[]>('deferToExtensions', [])
@@ -44,10 +48,14 @@ export async function activate(context: ExtensionContext) {
     if (deferTo !== undefined) {
         const channel = window.createOutputChannel('PHPUnit Debug', 'phpunit');
         channel.appendLine(
-            `[PHPUnit] "${deferTo}" is installed; deferring test registration to it ` +
-                `(phpunit.deferToExtensions). Set phpunit.deferToExtensions to [] to always register.`,
+            `[PHPUnit] "${deferTo}" is installed; deferring Test Explorer registration to it ` +
+                `(phpunit.deferToExtensions). Terminal-output commands remain available: ` +
+                `"PHPUnit: Run current file (terminal output)" and ` +
+                `"PHPUnit: Run all tests (terminal output)". ` +
+                `Set phpunit.deferToExtensions to [] to register the Test Explorer as well.`,
         );
-        context.subscriptions.push(channel);
+        commands.executeCommand('setContext', 'phpunit.deferred', true);
+        context.subscriptions.push(channel, ...registerTerminalOnlyCommands());
         return;
     }
 
@@ -206,6 +214,38 @@ function createRunProfiles(ctrl: TestController, dispatcher: TestRunDispatcher) 
     };
 
     return testRunProfile;
+}
+
+// Registered only while deferring Test Explorer registration to another provider.
+// These give the user on-demand PHPUnit runs whose formatted output streams to the
+// integrated "PHPUnit" terminal, without registering a duplicate test controller.
+function registerTerminalOnlyCommands(): Disposable[] {
+    const runner = new TerminalTestRunner(new PhpUnitTerminal());
+
+    const activeFolder = (): WorkspaceFolder | undefined => {
+        const uri = window.activeTextEditor?.document.uri;
+        const folder = uri ? workspace.getWorkspaceFolder(uri) : undefined;
+        return folder ?? workspace.workspaceFolders?.[0];
+    };
+
+    return [
+        commands.registerCommand('phpunit.run-file-terminal', async () => {
+            const editor = window.activeTextEditor;
+            if (!editor) {
+                window.showWarningMessage('PHPUnit: open a test file to run it in the terminal.');
+                return;
+            }
+            await runner.runFile(editor.document.uri);
+        }),
+        commands.registerCommand('phpunit.run-all-terminal', async () => {
+            const folder = activeFolder();
+            if (!folder) {
+                window.showWarningMessage('PHPUnit: no workspace folder is open to run tests in.');
+                return;
+            }
+            await runner.runAll(folder);
+        }),
+    ];
 }
 
 function registerCommands(context: ExtensionContext, testCommandRegistry: TestCommandRegistry) {

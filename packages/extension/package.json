@@ -70,9 +70,41 @@
             {
                 "command": "phpunit.rerun",
                 "title": "PHPUnit: Repeat the last test run"
+            },
+            {
+                "command": "phpunit.run-file-terminal",
+                "title": "PHPUnit: Run current file (terminal output)"
+            },
+            {
+                "command": "phpunit.run-all-terminal",
+                "title": "PHPUnit: Run all tests (terminal output)"
             }
         ],
+        "menus": {
+            "commandPalette": [
+                {
+                    "command": "phpunit.run-file-terminal",
+                    "when": "phpunit.deferred"
+                },
+                {
+                    "command": "phpunit.run-all-terminal",
+                    "when": "phpunit.deferred"
+                }
+            ],
+            "editor/context": [
+                {
+                    "command": "phpunit.run-file-terminal",
+                    "when": "editorLangId == php && phpunit.deferred",
+                    "group": "phpunit@1"
+                }
+            ]
+        },
         "keybindings": [
+            {
+                "key": "cmd+t cmd+r",
+                "command": "phpunit.run-file-terminal",
+                "when": "editorTextFocus && editorLangId == php && phpunit.deferred"
+            },
             {
                 "key": "cmd+t cmd+s",
                 "command": "phpunit.run-all"

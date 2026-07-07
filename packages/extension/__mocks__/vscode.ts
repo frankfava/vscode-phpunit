@@ -422,8 +422,24 @@ const window = {
             show: vi.fn(),
         };
     }),
+    createTerminal: vi.fn().mockImplementation(({ pty }: any = {}) => {
+        // Emulate VS Code: subscribe to the pty's writer and open it on first show.
+        let opened = false;
+        pty?.onDidWrite?.(() => {});
+        return {
+            show: vi.fn().mockImplementation(() => {
+                if (!opened) {
+                    opened = true;
+                    pty?.open?.(undefined);
+                }
+            }),
+            dispose: vi.fn(),
+        };
+    }),
+    onDidCloseTerminal: vi.fn().mockReturnValue(new Disposable()),
     showErrorMessage: vi.fn(),
     showInformationMessage: vi.fn(),
+    showWarningMessage: vi.fn(),
     showQuickPick: vi.fn(),
 };
 
@@ -437,7 +453,8 @@ const commands = (() => {
                 return new Disposable();
             }),
         executeCommand: async (command: string, ...rest: any[]) => {
-            return commands.get(command)!(...rest);
+            // Built-in commands like `setContext` aren't registered in tests; ignore them.
+            return commands.get(command)?.(...rest);
         },
     };
 })();

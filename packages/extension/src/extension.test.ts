@@ -213,6 +213,53 @@ describe('Extension Test', () => {
         );
     };
 
+    describe('Defer mode (terminal output)', () => {
+        const root = phpUnitProject('');
+        const testFile = phpUnitProject('tests/AssertionsTest.php');
+
+        beforeEach(async () => {
+            await setupEnvironment(root, 'vendor/bin/phpunit');
+            // The defer check reads the unscoped `phpunit` configuration.
+            await workspace
+                .getConfiguration('phpunit')
+                .update('deferToExtensions', ['devsense.phptools-vscode']);
+        });
+
+        afterEach(async () => {
+            await workspace.getConfiguration('phpunit').update('deferToExtensions', []);
+            vi.clearAllMocks();
+        });
+
+        it('registers terminal commands and skips the Test Explorer controller', async () => {
+            await activate(context);
+
+            expect(tests.createTestController).not.toHaveBeenCalled();
+            expect(commands.registerCommand).toHaveBeenCalledWith(
+                'phpunit.run-file-terminal',
+                expect.any(Function),
+            );
+            expect(commands.registerCommand).toHaveBeenCalledWith(
+                'phpunit.run-all-terminal',
+                expect.any(Function),
+            );
+        });
+
+        it('streams the active file run to the PHPUnit terminal', async () => {
+            setActiveTextEditor(testFile);
+            await activate(context);
+
+            await commands.executeCommand('phpunit.run-file-terminal');
+
+            expect(window.createTerminal).toHaveBeenCalled();
+            expectSpawnCalled([
+                'vendor/bin/phpunit',
+                Uri.file(testFile).fsPath,
+                '--colors=always',
+                '--teamcity',
+            ]);
+        });
+    });
+
     describe('Cancellation', () => {
         const root = phpUnitProject('');
 
