@@ -1,9 +1,18 @@
 import { execSync } from 'node:child_process';
+import { mkdtempSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { defineConfig } from '@vscode/test-cli';
 
 const fixturesPath = resolve(import.meta.dirname, '../phpunit/tests/fixtures');
 const mochaOpts = { ui: 'tdd', timeout: 30_000 };
+
+// macOS (and Windows) cap Unix-domain-socket paths at ~104 chars. The default
+// `.vscode-test/user-data` dir lives under this nested monorepo checkout, whose
+// absolute path on CI runners pushes the IPC socket past that limit and fails
+// with "listen EINVAL: invalid argument". Point each run at a short, unique
+// temp dir so the socket path stays well under the limit.
+const userDataDirArg = () => `--user-data-dir=${mkdtempSync(join(tmpdir(), 'vsct-'))}`;
 
 function detectPhpUnitStubs() {
     const versions = [9, 10, 11, 12];
@@ -66,7 +75,7 @@ if (phpUnitStubs.length > 0) {
         label: `phpunit:${stub.name}`,
         files: 'out/tests/suite/**/*.test.js',
         mocha: mochaOpts,
-        launchArgs: [...stub.launchArgs, '--disable-extensions'],
+        launchArgs: [...stub.launchArgs, '--disable-extensions', userDataDirArg()],
         env: {
             STUB_TYPE: stub.type,
             STUB_VERSION: stub.name,
@@ -83,7 +92,7 @@ if (pestStubs.length > 0) {
         label: `pest:${stub.name}`,
         files: 'out/tests/suite/**/*.test.js',
         mocha: mochaOpts,
-        launchArgs: [...stub.launchArgs, '--disable-extensions'],
+        launchArgs: [...stub.launchArgs, '--disable-extensions', userDataDirArg()],
         env: {
             STUB_TYPE: stub.type,
             STUB_VERSION: stub.name,
@@ -103,7 +112,7 @@ if (phpUnitStubs.length > 0 && pestStubs.length > 0) {
         label: 'multi-workspace',
         files: 'out/tests/suite-multi/**/*.test.js',
         mocha: mochaOpts,
-        launchArgs: [workspacePath, '--disable-extensions'],
+        launchArgs: [workspacePath, '--disable-extensions', userDataDirArg()],
         env: {
             PHPUNIT_STUB_VERSION: phpUnit.name,
             PHPUNIT_STUB_BINARY: phpUnit.binary,
@@ -126,7 +135,7 @@ try {
         label: 'issue-381',
         files: 'out/tests/suite-issue-381/**/*.test.js',
         mocha: mochaOpts,
-        launchArgs: [workspacePath, '--disable-extensions'],
+        launchArgs: [workspacePath, '--disable-extensions', userDataDirArg()],
         env: {
             ISSUE381_PHPUNIT_BINARY: issue381Binary,
         },
