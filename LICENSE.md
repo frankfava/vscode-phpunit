@@ -1,6 +1,10 @@
 The MIT License (MIT)
 
 Copyright (c) 2015 recca0120
+Copyright (c) 2026 Frank Fava
+
+This project is a fork of recca0120/vscode-phpunit:
+https://github.com/recca0120/vscode-phpunit
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
