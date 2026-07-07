@@ -4,7 +4,7 @@ Thanks for your interest in improving PHPUnit & Pest Test Explorer!
 
 ## Reporting Bugs
 
-Please use the [Bug Report](https://github.com/recca0120/vscode-phpunit/issues/new?template=bug_report.yml) template. The most helpful reports include:
+Please use the [Bug Report](https://github.com/frankfava/vscode-phpunit/issues/new?template=bug_report.yml) template. The most helpful reports include:
 
 - Your `phpunit.*` settings from `.vscode/settings.json`
 - The output from the **PHPUnit** output channel (View → Output → "PHPUnit")
@@ -14,7 +14,7 @@ These details help us reproduce the issue quickly. Without them, we may need to 
 
 ## Suggesting Features
 
-Open a [Feature Request](https://github.com/recca0120/vscode-phpunit/issues/new?template=feature_request.yml) to discuss the idea before writing code. This saves effort in case the feature doesn't fit the project direction or there's an existing way to achieve what you need.
+Open a [Feature Request](https://github.com/frankfava/vscode-phpunit/issues/new?template=feature_request.yml) to discuss the idea before writing code. This saves effort in case the feature doesn't fit the project direction or there's an existing way to achieve what you need.
 
 ## Submitting Pull Requests
 
@@ -26,7 +26,7 @@ Open a [Feature Request](https://github.com/recca0120/vscode-phpunit/issues/new?
 ### Development Setup
 
 ```bash
-git clone https://github.com/recca0120/vscode-phpunit.git
+git clone https://github.com/frankfava/vscode-phpunit.git
 cd vscode-phpunit
 pnpm install    # also installs Lefthook git hooks
 ```
@@ -51,4 +51,4 @@ The project uses [Biome](https://biomejs.dev/) for linting and formatting, with 
 
 ## Questions?
 
-If you have questions that aren't bugs or feature requests, please use [GitHub Discussions](https://github.com/recca0120/vscode-phpunit/discussions).
+If you have questions that aren't bugs or feature requests, please use [GitHub Discussions](https://github.com/frankfava/vscode-phpunit/discussions).

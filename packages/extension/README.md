@@ -400,9 +400,9 @@ If the same tests appear under multiple workspace folders, check your `phpunit.a
 
 Found a bug? Have an idea? We welcome contributions!
 
-- [Report a bug](https://github.com/recca0120/vscode-phpunit/issues/new?template=bug_report.yml)
-- [Request a feature](https://github.com/recca0120/vscode-phpunit/issues/new?template=feature_request.yml)
-- [Development guide](https://github.com/recca0120/vscode-phpunit)
+- [Report a bug](https://github.com/frankfava/vscode-phpunit/issues/new?template=bug_report.yml)
+- [Request a feature](https://github.com/frankfava/vscode-phpunit/issues/new?template=feature_request.yml)
+- [Development guide](https://github.com/frankfava/vscode-phpunit)
 
 ## License
 
