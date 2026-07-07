@@ -4,6 +4,7 @@ import {
     activateExtension,
     collectTestItemIds,
     countTestItems,
+    EXTENSION_ID,
     type ExtensionApi,
     findTestItem,
     waitForTestItems,
@@ -47,7 +48,7 @@ suite(`${stubType === 'pest' ? 'Pest' : 'PHPUnit'} ${stubVersion} — E2E`, () =
     });
 
     test('should activate extension', () => {
-        const ext = vscode.extensions.getExtension('recca0120.vscode-phpunit');
+        const ext = vscode.extensions.getExtension(EXTENSION_ID);
         assert.ok(ext, 'Extension should exist');
         assert.ok(ext.isActive, 'Extension should be active');
     });
